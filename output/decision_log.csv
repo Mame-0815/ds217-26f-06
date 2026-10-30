@@ -1,0 +1,10 @@
+table,issue,decision,reason
+patients,exact duplicate rows,Keep the first occurrence of each exact duplicate row,Exact copies of a patient record do not represent additional patients.
+patients,gender spellings that are not a code,"Strip surrounding whitespace, lowercase, and map to F/M/X; leave blanks and unknown values missing",Spellings such as female and woman represent the same category; unknown values cannot be inferred.
+patients,site codes needing normalization,Uppercase site codes and remove all spaces and hyphens,"N-01, n01, and N 01 refer to the same site, N01."
+patients,birth_year sentinel 9999,Replace 9999 with a missing value and use nullable Int64,The sentinel 9999 means not recorded and is not a valid birth year.
+visits,weight column named wt_kg in visits_south.csv,Rename wt_kg to weight_kg before concatenating the exports,"Both offices report the same weight measurement in kilograms, so the values belong in one column."
+visits,sbp sentinel 999 and readings outside 70 through 250,Keep readings from 70 through 250 inclusive and set all other values to missing,"The sentinel 999 means not measured, and out-of-range values violate the assignment data contract."
+visits,impossible and loosely written visit dates,Accept only exact YYYY-MM-DD strings representing valid calendar dates,"Dates such as 2026-02-29 do not exist, and loosely formatted dates violate the required format."
+visits,repeated patient_id and visit pairs,"Remove exact duplicates, sort by visit_time, and keep the last row for each patient-visit key",Readings at different times for the same patient and visit are rechecks; the assignment requires the later reading.
+sites,repeated site_code rows,Keep only site records whose record_status is current,Retired names are historical versions of the same site and would multiply rows during a merge.
